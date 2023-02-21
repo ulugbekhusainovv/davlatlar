@@ -5,6 +5,8 @@ const animation = document.querySelector(".animation");
 const select = document.querySelector("#select");
 const inputScrol = document.querySelector("#input_scrol");
 const errorEl = document.querySelector(".errorEl");
+const countryName = document.getElementsByClassName("countryName");
+const regionName = document.getElementsByClassName("regions");
 
 //mode
 const body = document.querySelector("body");
@@ -45,9 +47,6 @@ const getData = async (surse) => {
 
 getData(API);
 
-// filter select
-let countr = data;
-
 const useDate = (data) => {
   contires.innerHTML = "";
   data[67] = { ...data[67], languages: { en: "English" } };
@@ -56,7 +55,7 @@ const useDate = (data) => {
     contires.innerHTML += `
     <div class="country"> 
     <img src=${flags.svg} alt="${name.common} flag img" height="160px">
-    <h3>${name.common}</h3>
+    <h3 class="countryName">${name.common}</h3>
     <p> <span> Population &nbsp&nbsp </span>  ${population}</p>
     <p class="regions"> <span> Region: &nbsp &nbsp &nbsp &nbsp </span> ${region}</p>
     <p id="scrEl" > <span> Capital: &nbsp &nbsp &nbsp &nbsp </span> ${
@@ -67,40 +66,24 @@ const useDate = (data) => {
   });
 };
 select.addEventListener("change", () => {
-  if (select.value == "All") {
-    useDate(data);
-    alert("All selected");
-    console.log(allEl);
-  }
-
-  const filterCounrt = data.filter((item) => {
-    return item.region == select.value;
-  });
-  countr = filterCounrt;
-  useDate(countr);
-});
-//127.0.0.1:5501/
-http: input.addEventListener("input", () => {
-  let val = input.value.toLowerCase().trim();
-  // let errorEl = "No result";
-  let filtered = [];
-  data.forEach((item) => {
-    if (contires.innerHTML) {
-      errorEl.classList.add("hidden");
-      if (item.name.common.toLowerCase().includes(val)) {
-        filtered.push(item);
-        errorEl.classList.add("hidden");
-      }
-    } else if (contires.innerHTML === "") {
-      if (item.name.common.toLowerCase().includes(val)) {
-        filtered.push(item);
-        errorEl.classList.add("hidden");
-      } else {
-        errorEl.classList.remove("hidden");
-      }
+  Array.from(regionName).forEach((element) => {
+    if (element.innerText.includes(select.value) || select.value == "All") {
+      element.parentElement.classList.remove("hidden");
+    } else {
+      element.parentElement.classList.add("hidden");
     }
   });
-  useDate(filtered);
+});
+input.addEventListener("input", () => {
+  let val = input.value.toLowerCase().trim();
+  Array.from(countryName).forEach((item) => {
+    if (item.textContent.toLowerCase().includes(val)) {
+      item.parentElement.classList.remove("hidden");
+    } else {
+      item.parentElement.classList.add("hidden");
+      errorMessage();
+    }
+  });
 });
 
 document.addEventListener("scroll", (e) => {
@@ -113,3 +96,11 @@ document.addEventListener("scroll", (e) => {
     }, 3000);
   }
 });
+
+document.addEventListener("dblclick", (e) => {
+  input.focus();
+});
+
+function errorMessage() {
+  errorEl.classList.remove("hidden");
+}
