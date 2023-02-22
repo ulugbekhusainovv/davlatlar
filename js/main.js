@@ -81,7 +81,7 @@ input.addEventListener("input", () => {
       item.parentElement.classList.remove("hidden");
     } else {
       item.parentElement.classList.add("hidden");
-      errorMessage();
+      errorEl.classList.remove("hidden");
     }
   });
 });
@@ -101,6 +101,4 @@ document.addEventListener("dblclick", (e) => {
   input.focus();
 });
 
-function errorMessage() {
-  errorEl.classList.remove("hidden");
-}
+
